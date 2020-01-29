@@ -32,6 +32,7 @@ Please wait...
 <script src="/__/firebase/init.js"></script>
 
 <script>
+  
   /**
    * Returns the value of the given URL query parameter.
    */
@@ -60,7 +61,7 @@ Please wait...
       document.body.innerText = 'Error in the token Function: ' + data.error;
     }
   }
-
+ 
   var code = getURLParameter('code');
   var state = getURLParameter('state');
   var error = getURLParameter('error');
@@ -70,6 +71,7 @@ Please wait...
     // Start the auth flow.
     window.location.href  = 'https://us-central1-' + getFirebaseProjectId() + '.cloudfunctions.net/redirect';
   } else {
+    console.log('here is the error');
     // Use JSONP to load the 'token' Firebase Function to exchange the auth code against a Firebase custom token.
     const script = document.createElement('script');
     script.type = 'text/javascript';
