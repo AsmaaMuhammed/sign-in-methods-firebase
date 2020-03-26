@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Calendar API List </title>
+    <meta charset="utf-8" />
+  </head>
+  <body onload="listUpcomingEvents();">
+      <div id="list" style="white-space: pre-wrap;"></div>
+      
+<script>
+
+/**
+       * Print the summary and start datetime/date of the next ten events in
+       * the authorized user's calendar. If no events are found an
+       * appropriate message is printed.
+       */
+function listUpcomingEvents() {
+    gapi.client.calendar.events.list({
+      'calendarId': 'primary',
+      'timeMin': (new Date()).toISOString(),
+      'showDeleted': false,
+      'singleEvents': false,
+      'maxResults': 10
+      //'orderBy': 'startTime'
+    }).then(function(response) {
+      var events = response.result.items;
+      document.getElementById('list').innerHTML='Upcoming events:';
+      var node = document.getElementById('list');
+      if (events.length > 0) {
+        for (i = 0; i < events.length; i++) {
+          var event = events[i];
+          var when = event.start.dateTime;
+          if (!when) {
+            when = event.start.date;
+          }
+          console.log(event);
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(event.summary + ' (' + when + ')'));
+          var button = document.createElement("button");
+          button.innerHTML = "update";
+          li.appendChild(button);
+          li.setAttribute("id",event.id);
+          li.setAttribute("onclick",handleUpdateEventClick(event));
+          node.appendChild(li);
+          var button = document.createElement("button");
+          button.innerHTML = "delete";
+          li.appendChild(button);
+          li.setAttribute("id",event.id);
+          li.setAttribute("onclick",handleDeleteEventClick(event));
+          node.appendChild(li);
+          //node.innerHTML +='<a id="'+event.id+'" href="'+event.htmlLink+'">'+event.summary + ' (' + when + ')' +'</a>\n';
+          // node.innerHTML +='<a id="'+event.id+'" href="'+event.htmlLink+'" onclick = "'+showDetails(event.id)+'">'+event.summary + ' (' + when + ')' +'</a>\n';
+          // node.innerHTML +='<button id="'+event.id+'" class="btn-events" onclick = "'+handleUpdateEventClick(event)+'" >'+event.summary + ' (' + when + ')' +'</button>\n';
+        }
+      } else {
+        document.getElementById('list').innerHTML='No upcoming events found.';
+      }
+    });
+  }
+  function showDetails(eventId)
+  {
+    window.location = '/event_details.html?id='+eventId;
+  }
+ 
+</script>
+<script src="update.js"></script>
+<script src="delete.js"></script>
+</body>
+</html>

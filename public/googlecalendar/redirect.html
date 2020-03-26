@@ -1,0 +1,18 @@
+<html>
+    <head>
+
+    </head>
+    <body onload="getTokenParam()">
+        <script>
+            function getTokenParam()
+            {
+                const queryString = window.location.search;
+                console.log(queryString);
+                const urlParams = new URLSearchParams(queryString);
+                const token = urlParams.get('access_token')
+                alert(token);
+                console.log(token);
+            }
+        </script>
+    </body>
+</html>

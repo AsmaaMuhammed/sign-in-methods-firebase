@@ -34,6 +34,20 @@ admin.initializeApp({
 const OAUTH_REDIRECT_URI = `https://${process.env.GCLOUD_PROJECT}.firebaseapp.com/instgrampopup.html`;
 const OAUTH_SCOPES = 'basic';
 
+
+// When a user is created, register them with Stripe
+exports.CreateNewCalendar = functions.auth.user().onCreate(async (user) => {
+  var request = gapi.client.request({
+      'method': 'POST',
+      'path': '/calendar/v3/calendars',
+      'params': {},
+      'body':{'summary':'testCalendar12'}
+  });
+  request.execute(function(response) {
+      console.log(response);
+  }); 
+});
+//////////////
 exports.helloWorld = functions.https.onRequest((request, response) => {
  response.send("Hello from Firebase!");
 });
@@ -61,6 +75,7 @@ function instagramOAuth2Client() {
  * verification.
  */
 exports.redirect = functions.https.onRequest((req, res) => {
+  
   const oauth2 = instagramOAuth2Client();
 
   cookieParser()(req, res, () => {
